@@ -11,12 +11,12 @@
     "developerName": "ZiChen-Whisper",
     "displayName": "OPPO AI Pin Course Companion",
     "logo": "./assets/icon.png",
-    "longDescription": "复用 OPPO AI Pin 全时记和随口记，集中维护本地课程资料；先确认课堂记录与课程，再结合教材生成 whisper-html 笔记；在飞书维护考试、作业和实验要求。索引更新固定由 gpt-6-luna/high 子 Agent 执行。需要本地 Python，以及笔记和飞书流程对应的技能。非 OPPO 官方插件。",
+    "longDescription": "复用 OPPO AI Pin 全时记和随口记，集中维护本地课程资料；先确认课堂记录与课程，再结合教材生成 HTML 笔记（可使用自选美化技能，缺失时自主生成）；在飞书维护考试、作业和实验要求。索引更新固定由 gpt-6-luna/high 子 Agent 执行。需要本地 Python，以及笔记和飞书流程对应的技能。非 OPPO 官方插件。",
     "shortDescription": "课程资料管理、课堂笔记与考试作业信息整理"
   },
   "requires_local_executor": true,
   "name": "oppo-ai-pin-campus",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "University course materials, class notes, and course requirements with OPPO AI Pin.",
   "author": {
     "name": "ZiChen-Whisper"
