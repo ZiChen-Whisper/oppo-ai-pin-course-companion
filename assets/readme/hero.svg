@@ -1,1 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img"><title>OPPO AI Pin Course Companion</title><rect width="1200" height="260" fill="#fff"/><circle cx="51" cy="49" r="22" fill="none" stroke="#26313b" stroke-width="5"/><text x="96" y="60" font-family="Segoe UI,sans-serif" font-size="34" letter-spacing="2" fill="#626d77">OPPO AI Pin</text><text x="28" y="170" font-family="Segoe UI,sans-serif" font-size="88" font-weight="600" letter-spacing="-2" fill="#1b252f">Course Companion</text><path d="M30 226H1170" stroke="#cfd5da"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="250" viewBox="0 0 1200 250" role="img" aria-labelledby="title desc">
+  <title id="title">OPPO AI Pin Course Companion</title>
+  <desc id="desc">Course Companion title with a transparent metallic ring matching the OPPO AI Pin motif.</desc>
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="0.12" y2="1">
+      <stop offset="0" stop-color="#192c3b"/>
+      <stop offset=".25" stop-color="#344455"/>
+      <stop offset=".58" stop-color="#7b7d98"/>
+      <stop offset=".82" stop-color="#b5afbe"/>
+      <stop offset="1" stop-color="#d4ccc6"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2=".8" y2="1">
+      <stop stop-color="#b6c0c8" stop-opacity=".65"/>
+      <stop offset=".35" stop-color="#354351" stop-opacity=".35"/>
+      <stop offset=".8" stop-color="#f2e8ed" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#787783" stop-opacity=".8"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(20 17) scale(0.475)"><g id="ring">
+    <path fill="url(#metal)" fill-rule="evenodd" d="M80 10a70 70 0 1 1 0 140 70 70 0 1 1 0-140Zm0 21a49 49 0 1 0 0 98 49 49 0 1 0 0-98Z"/>
+    <circle cx="80" cy="80" r="69.6" fill="none" stroke="url(#rim)" stroke-width=".8"/>
+    <circle cx="80" cy="80" r="49.4" fill="none" stroke="url(#rim)" stroke-width=".8"/>
+  </g></g>
+  <text x="118" y="70" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Microsoft YaHei,PingFang SC,sans-serif" font-size="42" letter-spacing="1" fill="#626d77">OPPO AI Pin</text>
+  <text x="24" y="175" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Microsoft YaHei,PingFang SC,sans-serif" font-size="88" font-weight="600" letter-spacing="-2" fill="#202b35">Course Companion</text>
+  <path d="M28 227H1172" stroke="#d9dee2"/>
+
+</svg>

@@ -1,16 +1,18 @@
-<p align="right"><img src="assets/icon.png" width="88" alt="OPPO AI Pin 圆环标识"></p>
-
-<h1><img src="assets/readme/hero.svg" width="100%" alt="OPPO AI Pin Course Companion"></h1>
+<h1><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/hero-dark.svg">
+  <img src="assets/readme/hero.svg" width="100%" alt="OPPO AI Pin Course Companion">
+</picture></h1>
 
 面向大学生的 Codex 课程助手。上课时用心力球记录，课后让 Agent 帮你找回讲过的内容、结合教材做笔记，并整理考试、作业和实验要求。
 
 <p align="center"><img src="assets/readme/product-white.png" width="480" alt="OPPO AI Pin 白底产品图"></p>
 
-<p align="center"><img src="assets/icon.png" width="40" alt="心力球圆环图标"></p>
-
 <p align="center">Local MCP + Skills · Python 3.10+ · 非 OPPO 官方插件</p>
 
-<h2><img src="assets/readme/section-overview.svg" width="760" alt="课程里的三件事"></h2>
+<h2><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/section-overview-dark.svg">
+  <img src="assets/readme/section-overview.svg" width="760" alt="课程里的三件事">
+</picture></h2>
 
 ### 01 / 维护课程资料
 
@@ -38,7 +40,10 @@ Agent 结合对应课本与课件生成可离线打开的 HTML：梳理概念、
 
 重复提及的事项合并来源；延期、改范围保留变更历史。你在飞书写的备注和确认不会被整篇覆盖。
 
-<h2><img src="assets/readme/section-start.svg" width="760" alt="开始使用"></h2>
+<h2><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/section-start-dark.svg">
+  <img src="assets/readme/section-start.svg" width="760" alt="开始使用">
+</picture></h2>
 
 需要 Python 3.10+、支持本地插件与子 Agent 的 Codex 环境，以及你自行授权的 OPPO AI Pin MCP。公开仓库只声明本地 MCP；远程服务的地址与登录方式请从产品官方入口取得。
 
@@ -64,7 +69,10 @@ Agent 结合对应课本与课件生成可离线打开的 HTML：梳理概念、
 
 首次调用时创建或关联你的课程信息文档。没有配置飞书时，课程资料管理和本地笔记仍可独立使用；插件不会假装已同步云端。
 
-<h2><img src="assets/readme/section-customize.svg" width="760" alt="选择你的笔记风格"></h2>
+<h2><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/section-customize-dark.svg">
+  <img src="assets/readme/section-customize.svg" width="760" alt="选择你的笔记风格">
+</picture></h2>
 
 **不强制安装 whisper-html 或 whisper-illustration。** 你可以换成自己的 HTML、笔记或插画技能，例如：
 
@@ -79,7 +87,10 @@ Agent 结合对应课本与课件生成可离线打开的 HTML：梳理概念、
 
 无论采用哪种方式，课程确认、原文核对、来源标注和文件命名规则都保留。这些外部技能不会打包进本仓库。
 
-<h2><img src="assets/readme/section-privacy.svg" width="760" alt="数据与边界"></h2>
+<h2><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/section-privacy-dark.svg">
+  <img src="assets/readme/section-privacy.svg" width="760" alt="数据与边界">
+</picture></h2>
 
 - **没有音频源文件**：只处理接口返回的转写、摘要与时间信息，不支持录音播放或下载。
 - **索引由指定子 Agent 更新**：固定 `gpt-6-luna / high`，不可用时报告失败。界面保存更新请求，回到聊天调用课程管理后执行。课堂回顾发现索引距成功更新时间达到 72 小时，会派发更新。
@@ -88,7 +99,10 @@ Agent 结合对应课本与课件生成可离线打开的 HTML：梳理概念、
 
 集中数据默认位于 Windows 的 `%LOCALAPPDATA%/OPPO-AI-Pin-Campus`，其他系统使用 `~/Documents/OPPO-AI-Pin-Campus`；可用 `OPPO_AI_PIN_DATA` 更换。课程目录下的 `OPPO-AI-Pin/` 保存所选记录元数据和笔记。请勿提交这些个人数据。
 
-<h2><img src="assets/readme/section-development.svg" width="760" alt="开发与许可"></h2>
+<h2><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme/section-development-dark.svg">
+  <img src="assets/readme/section-development.svg" width="760" alt="开发与许可">
+</picture></h2>
 
 运行时只使用 Python 标准库。`runtime/` 为本地 MCP 与存储，`skills/` 为三个工作流，`ui/` 为课程管理界面。
 
