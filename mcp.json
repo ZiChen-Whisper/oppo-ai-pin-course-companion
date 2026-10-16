@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "oppo-ai-pin-local": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "${PLUGIN_ROOT}/runtime/mcp_server.py"
+      ],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

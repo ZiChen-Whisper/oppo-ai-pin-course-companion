@@ -1,0 +1,6 @@
+interface:
+  display_name: 课程关键信息管理
+  short_description: 检查全部历史记录，在飞书维护考试、作业与实验要求及其来源
+  default_prompt: 使用 $oppo-ai-pin-course-info。
+  icon_small: ./assets/icon.png
+  icon_large: ./assets/icon.png

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+dist/
+work/
+*.log
+registry.json
+records.json
+manager.json
+course-info-sync.json
+indexes/
+jobs/
+*.zip

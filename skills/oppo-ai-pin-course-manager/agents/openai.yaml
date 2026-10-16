@@ -1,0 +1,6 @@
+interface:
+  display_name: 本地课程管理
+  short_description: 集中管理课程名称、资料目录、教材课件分类、备注和资料索引
+  default_prompt: 使用 $oppo-ai-pin-course-manager。
+  icon_small: ./assets/icon.png
+  icon_large: ./assets/icon.png

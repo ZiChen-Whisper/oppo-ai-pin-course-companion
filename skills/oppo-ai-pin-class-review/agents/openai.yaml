@@ -1,0 +1,6 @@
+interface:
+  display_name: 课堂回顾与复习
+  short_description: 收齐新的课堂记录，确认课程后结合本地教材生成 HTML 笔记
+  default_prompt: 使用 $oppo-ai-pin-class-review。
+  icon_small: ./assets/icon.png
+  icon_large: ./assets/icon.png

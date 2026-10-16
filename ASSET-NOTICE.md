@@ -1,0 +1,1 @@
+产品图片由项目创建者提供，用于展示 OPPO AI Pin 的外形。OPPO 及其产品的商标与图片权利属于各自权利人，不适用本仓库 MIT 代码许可。assets/icon.png 与技能中的同款图标也不授予本项目所不拥有的第三方权利。原创 assets/readme/*.svg 按 MIT 许可。

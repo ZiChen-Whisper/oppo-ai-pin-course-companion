@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "oppo-ai-pin-local": {
+      "command": "python",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/runtime/mcp_server.py"
+      ],
+      "cwd": "${CLAUDE_PLUGIN_ROOT}"
+    }
+  }
+}
