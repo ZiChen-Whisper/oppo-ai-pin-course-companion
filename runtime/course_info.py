@@ -77,7 +77,7 @@ def parse_document(response, courses):
         editable = tag == 'p' and all(e.tag == 'br' for e in element) and identifier not in protected
         if editable:
             text = (element.text or '') + ''.join('\n' + (e.tail or '') for e in element)
-        blocks.append({'id': identifier, 'course_id': course_id, 'section': section or '课程概览',
+        blocks.append({'id': identifier, 'course_id': course_id, 'section': section or '其他课程信息',
                        'tag': tag, 'text': text, 'editable': editable,
                        'xml': ET.tostring(element, encoding='unicode'), 'base_text': text})
     return blocks, document.get('revision_id')

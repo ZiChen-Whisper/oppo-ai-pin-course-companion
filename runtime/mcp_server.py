@@ -23,7 +23,7 @@ TOOLS = [
 def handle(req):
     method = req.get('method')
     if method == 'initialize':
-        return {'protocolVersion': req.get('params',{}).get('protocolVersion','2024-11-05'), 'capabilities': {'tools': {}}, 'serverInfo': {'name':'oppo-ai-pin-campus-local','version':'0.4.0'}}
+        return {'protocolVersion': req.get('params',{}).get('protocolVersion','2024-11-05'), 'capabilities': {'tools': {}}, 'serverInfo': {'name':'oppo-ai-pin-campus-local','version':'0.4.1'}}
     if method == 'ping': return {}
     if method == 'tools/list': return {'tools': TOOLS}
     if method == 'resources/list': return {'resources':[]}
