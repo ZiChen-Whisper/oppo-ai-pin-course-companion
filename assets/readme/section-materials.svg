@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="64" viewBox="0 0 760 64" role="img" aria-labelledby="title desc">
+  <title id="title">把课程资料集中管理</title>
+  <desc id="desc">把课程资料集中管理；透明金属圆环与左对齐标题。</desc>
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="0.12" y2="1">
+      <stop offset="0" stop-color="#192c3b"/>
+      <stop offset=".25" stop-color="#344455"/>
+      <stop offset=".58" stop-color="#7b7d98"/>
+      <stop offset=".82" stop-color="#b5afbe"/>
+      <stop offset="1" stop-color="#d4ccc6"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2=".8" y2="1">
+      <stop stop-color="#b6c0c8" stop-opacity=".65"/>
+      <stop offset=".35" stop-color="#354351" stop-opacity=".35"/>
+      <stop offset=".8" stop-color="#f2e8ed" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#787783" stop-opacity=".8"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0 4) scale(0.3)"><g id="ring">
+    <path fill="url(#metal)" fill-rule="evenodd" d="M80 10a70 70 0 1 1 0 140 70 70 0 1 1 0-140Zm0 21a49 49 0 1 0 0 98 49 49 0 1 0 0-98Z"/>
+    <circle cx="80" cy="80" r="69.6" fill="none" stroke="url(#rim)" stroke-width=".8"/>
+    <circle cx="80" cy="80" r="49.4" fill="none" stroke="url(#rim)" stroke-width=".8"/>
+  </g></g>
+  <text x="64" y="41" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Microsoft YaHei,PingFang SC,sans-serif" font-size="34" font-weight="600" fill="#202b35">把课程资料集中管理</text>
+
+</svg>
