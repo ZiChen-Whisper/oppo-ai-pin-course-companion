@@ -76,7 +76,8 @@ class RuntimeTest(unittest.TestCase):
         lines=[json.loads(l) for l in result.stdout.splitlines()]
         self.assertEqual(len(lines),3)
         self.assertEqual(lines[0]['result']['serverInfo']['name'],'oppo-ai-pin-campus-local')
-        self.assertEqual(len(lines[1]['result']['tools']),4)
+        names={t['name'] for t in lines[1]['result']['tools']}
+        self.assertTrue({'open_course_manager','list_course_notes','sync_course_info'}.issubset(names))
         self.assertEqual(json.loads(lines[2]['result']['content'][0]['text'])['courses'][0]['name'],'操作系统')
 
     def test_completion_rejects_new_source_revision(self):

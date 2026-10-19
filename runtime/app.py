@@ -8,10 +8,12 @@ import subprocess
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlencode
 
 from store import Store, atomic_json, read_json, now, valid_id, lock
 from catalog import catalog, update_materials
+from notes import list_notes, read_note
+import course_info
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -52,19 +54,22 @@ def state(store):
 
 def serve(store, port=0):
     token = secrets.token_urlsafe(32)
+    previews = {}
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
             pass
 
-        def respond(self, status, value, mime='application/json; charset=utf-8'):
+        def respond(self, status, value, mime='application/json; charset=utf-8', preview=False):
             data = json.dumps(value, ensure_ascii=False).encode() if mime.startswith('application/json') else value
             self.send_response(status)
             self.send_header('Content-Type', mime)
             self.send_header('Content-Length', str(len(data)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'")
+            policy = ("sandbox allow-scripts; default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; frame-ancestors 'self'; base-uri 'none'; form-action 'none'" if preview else "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'")
+            self.send_header('Content-Security-Policy', policy)
+            self.send_header('Referrer-Policy', 'no-referrer')
             self.end_headers()
             self.wfile.write(data)
 
@@ -77,6 +82,14 @@ def serve(store, port=0):
             if not self.allowed():
                 return self.respond(403, {'error': '不允许的访问来源'})
             path = urlsplit(self.path).path
+            if path.startswith('/preview/'):
+                entry = previews.get(path.rsplit('/', 1)[-1])
+                if not entry or entry['expires'] < time.monotonic():
+                    return self.respond(404, b'Preview expired. Close and reopen the note.', 'text/plain; charset=utf-8')
+                try:
+                    return self.respond(200, read_note(store, entry['course_id'], entry['note_id']), 'text/html; charset=utf-8', preview=True)
+                except (ValueError, OSError):
+                    return self.respond(404, b'Note is no longer available.', 'text/plain; charset=utf-8')
             if path.startswith('/api/'):
                 if self.headers.get('X-Campus-Token') != token:
                     return self.respond(403, {'error': '请从技能提供的管理链接打开'})
@@ -85,6 +98,10 @@ def serve(store, port=0):
                         return self.respond(200, state(store))
                     if path.startswith('/api/index/'):
                         return self.respond(200, catalog(store, path.rsplit('/', 1)[1]))
+                    if path.startswith('/api/notes/'):
+                        return self.respond(200, list_notes(store, path.rsplit('/', 1)[1]))
+                    if path.startswith('/api/course-info/'):
+                        return self.respond(200, course_info.view(store, path.rsplit('/', 1)[1]))
                     if path == '/api/records':
                         return self.respond(200, store.records())
                     return self.respond(404, {'error': '接口不存在'})
@@ -133,6 +150,19 @@ def serve(store, port=0):
                 elif self.path == '/api/feishu':
                     store.set_feishu(str(body['url']).strip())
                     value = {'saved': True}
+                elif self.path == '/api/note-preview':
+                    read_note(store, body['course_id'], body['note_id'])
+                    for key in list(previews):
+                        if previews[key]['expires'] < time.monotonic(): previews.pop(key, None)
+                    ticket = secrets.token_urlsafe(32)
+                    previews[ticket] = {**body, 'expires': time.monotonic() + 3600}
+                    value = {'url': '/preview/' + ticket}
+                elif self.path == '/api/course-info-edit':
+                    value = course_info.edit(store, body)
+                elif self.path == '/api/course-info-resolve':
+                    value = course_info.resolve(store, body)
+                elif self.path == '/api/course-info-sync':
+                    value = course_info.sync(store, body['course_id'], push=body.get('push', True))
                 else:
                     return self.respond(404, {'error': '接口不存在'})
                 return self.respond(200, value)
@@ -153,8 +183,11 @@ def main():
     sub.add_parser('list')
     sub.add_parser('records')
     p = sub.add_parser('serve'); p.add_argument('--port', type=int, default=0)
-    sub.add_parser('open')
-    for cmd in ('save-course', 'ingest', 'confirm', 'export', 'complete'):
+    p = sub.add_parser('open'); p.add_argument('--course-id'); p.add_argument('--view', choices=['materials','notes','info','settings'], default='materials')
+    p = sub.add_parser('notes'); p.add_argument('--course-id', required=True)
+    p = sub.add_parser('course-info'); p.add_argument('--course-id', required=True)
+    p = sub.add_parser('sync-info'); p.add_argument('--course-id'); p.add_argument('--pull-only', action='store_true')
+    for cmd in ('save-course', 'ingest', 'confirm', 'export', 'complete', 'edit-info', 'transcripts'):
         p = sub.add_parser(cmd); p.add_argument('--input', required=True)
     p = sub.add_parser('feishu'); p.add_argument('--url', required=True)
     p = sub.add_parser('index'); p.add_argument('--course-id', required=True)
@@ -192,8 +225,15 @@ def main():
                 time.sleep(.1)
             if result is None:
                 raise RuntimeError('管理服务启动失败')
+        result = dict(result)
+        base, credential = result['url'].split('#', 1)
+        if args.course_id and not store.course(args.course_id): raise ValueError('课程不存在')
+        result['url'] = base + '?' + urlencode({'course': args.course_id or '', 'view': args.view}) + '#' + credential
     elif args.command == 'list': result = state(store)
     elif args.command == 'records': result = store.records()
+    elif args.command == 'notes': result = list_notes(store, args.course_id)
+    elif args.command == 'course-info': result = course_info.view(store, args.course_id)
+    elif args.command == 'sync-info': result = course_info.sync(store, args.course_id, push=not args.pull_only)
     elif args.command == 'feishu': store.set_feishu(args.url); result = {'saved': True}
     elif args.command == 'index': result = request_index(store, args.course_id)
     elif args.command == 'job-status': result = update_job(store, args.course_id, args.status, args.error)
@@ -204,6 +244,10 @@ def main():
         elif args.command == 'confirm': result = store.confirm_records(source['ids'], source['course_id'])
         elif args.command == 'export': result = store.export_records(source['ids'], source['course_id'])
         elif args.command == 'complete': result = store.complete_records(source['items'])
+        elif args.command == 'edit-info': result = course_info.edit(store, source)
+        elif args.command == 'transcripts':
+            from transcripts import evidence
+            result = evidence(store, source['ids'])
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

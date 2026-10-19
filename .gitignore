@@ -10,6 +10,8 @@ registry.json
 records.json
 manager.json
 course-info-sync.json
+course-info.json
+course-info-remote.json
 indexes/
 jobs/
 node_modules/
