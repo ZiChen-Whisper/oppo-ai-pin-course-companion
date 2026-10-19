@@ -30,6 +30,16 @@ class RuntimeTest(unittest.TestCase):
         with self.assertRaises(ValueError): self.store.save_course({'id':'os','name':'错误','root':str(self.root)},0)
         self.assertEqual(self.store.course('os')['name'],'操作系统')
 
+    def test_course_icon_persists_without_changing_index(self):
+        self.assertEqual(self.course['icon'], '📚')
+        changed = self.store.save_course({**self.course, 'icon': '💻'}, 1)
+        self.assertEqual(self.store.course('os')['icon'], '💻')
+        self.assertEqual(changed['root'], self.course['root'])
+        self.assertEqual(changed['last_indexed_at'], self.course['last_indexed_at'])
+        with self.assertRaises(ValueError):
+            self.store.save_course({**changed, 'icon': '<script>'}, 2)
+        self.assertEqual(self.store.registry()['revision'], 2)
+
     def test_missing_pages_never_advance_cursor(self):
         b=self.batch();b['pages'][0]['payload'].update(last=False,totalPages=2)
         with self.assertRaises(ValueError):self.store.ingest(b)

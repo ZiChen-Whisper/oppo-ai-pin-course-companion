@@ -94,7 +94,7 @@ class Store:
                 raise ValueError('请填写课程名称和本地资料目录')
             if not Path(root).expanduser().is_absolute():
                 raise ValueError('资料目录需要填写完整的绝对路径')
-            fields = ('name', 'aliases', 'semester', 'teacher', 'notes', 'root', 'extra_roots', 'schedule', 'materials')
+            fields = ('name', 'aliases', 'semester', 'teacher', 'notes', 'root', 'extra_roots', 'schedule', 'materials', 'icon')
             c = {**old, 'id': cid}
             for key in fields:
                 if key in source:
@@ -107,6 +107,9 @@ class Store:
                 c.setdefault(key, '')
                 if not isinstance(c[key], str):
                     raise ValueError(key + ' 必须是文字')
+            c.setdefault('icon', '📚')
+            if c['icon'] not in ('📚','🎓','💻','📐','🧪','🔬','⚙️','📊','🌐','🎨','📝','📖'):
+                raise ValueError('请选择支持的课程图标')
             c['name'] = name
             c['root'] = str(Path(root).expanduser().resolve())
             for key in ('aliases', 'extra_roots', 'schedule'):
