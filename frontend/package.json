@@ -1,13 +1,14 @@
 {
   "name": "oppo-course-manager-ui",
   "private": true,
-  "version": "0.3.4",
+  "version": "0.3.5",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "check": "tsc --skipLibCheck --noEmit --allowJs --checkJs false --jsx react-jsx --moduleResolution bundler --module esnext --target es2022 src/main.jsx",
-    "link:library": "node scripts/link-library.mjs"
+    "link:library": "node scripts/link-library.mjs",
+    "sync:icons": "node scripts/sync-icon-catalog.mjs"
   },
   "dependencies": {
     "@heroui/react": "3.2.6",
@@ -16,7 +17,8 @@
     "lucide-react": "1.57.0",
     "react": "19.3.1",
     "react-aria-components": "1.22.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "@gravity-ui/icons": "2.23.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.3",

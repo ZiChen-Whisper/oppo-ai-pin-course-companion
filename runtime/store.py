@@ -9,6 +9,9 @@ import tempfile
 import time
 import uuid
 
+ICON_NAMES = frozenset(json.loads(Path(__file__).with_name('icon_catalog.json').read_text(encoding='utf-8')))
+LEGACY_ICONS = {'📚':'BookOpen','🎓':'GraduationCap','💻':'Display','📐':'TriangleRight','🧪':'Flask','🔬':'Microscope','⚙️':'Gear','📊':'ChartColumn','🌐':'Globe','🎨':'Palette','📝':'Pencil','📖':'BookOpen'}
+
 
 def now():
     return dt.datetime.now(dt.timezone.utc).isoformat()
@@ -107,9 +110,13 @@ class Store:
                 c.setdefault(key, '')
                 if not isinstance(c[key], str):
                     raise ValueError(key + ' 必须是文字')
-            c.setdefault('icon', '📚')
-            if c['icon'] not in ('📚','🎓','💻','📐','🧪','🔬','⚙️','📊','🌐','🎨','📝','📖'):
-                raise ValueError('请选择支持的课程图标')
+            icon = source.get('icon', old.get('icon', 'BookOpen'))
+            if not isinstance(icon, str):
+                raise ValueError('请选择有效的图标')
+            icon = LEGACY_ICONS.get(icon, icon)
+            if icon not in ICON_NAMES:
+                raise ValueError('请选择图标库中的图标')
+            c['icon'] = icon
             c['name'] = name
             c['root'] = str(Path(root).expanduser().resolve())
             for key in ('aliases', 'extra_roots', 'schedule'):

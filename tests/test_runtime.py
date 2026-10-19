@@ -31,14 +31,20 @@ class RuntimeTest(unittest.TestCase):
         self.assertEqual(self.store.course('os')['name'],'操作系统')
 
     def test_course_icon_persists_without_changing_index(self):
-        self.assertEqual(self.course['icon'], '📚')
+        self.assertEqual(self.course['icon'], 'BookOpen')
         changed = self.store.save_course({**self.course, 'icon': '💻'}, 1)
-        self.assertEqual(self.store.course('os')['icon'], '💻')
+        self.assertEqual(self.store.course('os')['icon'], 'Display')
         self.assertEqual(changed['root'], self.course['root'])
         self.assertEqual(changed['last_indexed_at'], self.course['last_indexed_at'])
         with self.assertRaises(ValueError):
             self.store.save_course({**changed, 'icon': '<script>'}, 2)
         self.assertEqual(self.store.registry()['revision'], 2)
+
+    def test_arbitrary_catalog_icon_is_independent_of_course_fields(self):
+        changed = self.store.save_course({**self.course, 'icon': 'Rocket'}, 1)
+        self.assertEqual(self.store.course('os')['icon'], 'Rocket')
+        self.assertEqual(changed['name'], self.course['name'])
+        self.assertEqual(changed['materials'], self.course['materials'])
 
     def test_missing_pages_never_advance_cursor(self):
         b=self.batch();b['pages'][0]['payload'].update(last=False,totalPages=2)

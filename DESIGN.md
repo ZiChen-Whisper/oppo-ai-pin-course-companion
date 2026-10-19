@@ -27,11 +27,11 @@
 - 目录变更后隐藏不匹配旧索引。索引更新仍由 gpt-6-luna / high 子 Agent 执行；界面只保存请求并展示真实任务状态。
 - data_root 使用 MCP 返回的实际路径，不能由另一个终端的环境变量推断为另一份总表。
 
-## 组件默认外观（0.3.4）
+## 组件默认外观（0.3.5）
 
 以本机 HeroUI 固定快照的 stories、组件 CSS 和实际运行预览为依据；已对照 Data Grid usage 示例。移除对 Select.Trigger、Checkbox.Control、Data Grid 表头/单元格、Tabs 内部、Action Bar 内部及 Modal 尺寸的消费端覆盖；不使用 !important、不重定义组件色彩 Token。
 
-课程导航使用 ListBox + Avatar + Label / Description，课程图标从 12 个预设中选择并保存；别名使用 TagGroup / Tag 自带移除按钮；错误与保存结果使用 Alert，索引排队/运行状态使用 Chip + Description；未保存提醒使用 AlertDialog；资料判断使用 Card；折叠区使用 Accordion；空态使用共享 EmptyState；面包屑和链接使用 Breadcrumbs / Link；课程设置使用 Form。Tabs 使用 primary 变体和内容宽度，文本通过公开 className 使用 foreground 保证对比度；表格不限制高度，纵向滚动由页面负责。品牌图片使用主题圆角。页面容器、网格、间距由业务 CSS 负责，交互组件保留组件库默认皮肤及状态。
+课程导航使用 ListBox + Avatar + Label / Description，课程图标自由选择 Gravity UI Icons 2.23.0 完整的 809 个 SVG 图标，以 Modal / SearchField / ListBox / Pagination 组合选择，不关联课程类型；图标数据打包在本地，支持搜索及分页；别名使用 TagGroup / Tag 自带移除按钮；错误使用 Alert，保存结果使用 Toast（默认单行布局、4500ms 自动消失），索引排队/运行状态使用 Chip + Description；未保存提醒使用 AlertDialog；资料判断使用 Card；折叠区使用 Accordion；空态使用共享 EmptyState；链接使用 Link；课程设置使用 Form。Tabs 使用 primary 变体和内容宽度，文本通过公开 className 使用 foreground 保证对比度；表格不限制高度，纵向滚动由页面负责。品牌图片使用主题圆角。页面容器、网格、间距由业务 CSS 负责，交互组件保留组件库默认皮肤及状态。
 
 Modal 通过 Container 的 size / scroll 参数设置，不用 CSS 强制改宽。新增课程表单的保存/取消放在 Modal.Footer，借助 form 属性关联 Form，不随表单内容滚动；错误也在底部操作区呈现。共享库没有已导出的 Sidebar；侧栏采用语义 aside 布局与现有 ListBox 组合，不伪称使用 Sidebar 组件。
 
@@ -40,3 +40,5 @@ Modal 通过 Container 的 size / scroll 参数设置，不用 CSS 强制改宽�
 原有存储、索引及认证逻辑未改。本次在隔离副本验证课程设置、别名添加/移除和保存读回，检查资料详情、筛选和批量操作入口；真实课程数据不写入验收内容。已检查桌面和手机的默认、空结果、选中、批量编辑、详情、选项展开、设置、错误、未保存及新增弹窗状态；新增弹窗完成操作已通过实际创建和读回验证。截图保留在任务 outputs/design/，不发布个人课程截图。
 
 构建检查仅验证 JS 语法和导入，不等于严格 TypeScript 类型检查。原生目录选择弹窗体验仍需用户在本机操作确认。
+
+图标升级时运行 frontend 的 sync:icons 脚本同步服务端允许列表；旧 Emoji 只作兼容映射，保存时升级为图标标识。课程、资料与索引内容保持独立。

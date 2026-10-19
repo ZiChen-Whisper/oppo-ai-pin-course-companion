@@ -25,7 +25,7 @@
     }
   },
   "name": "oppo-ai-pin-campus",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "repository": "https://github.com/ZiChen-Whisper/oppo-ai-pin-course-companion",
   "license": "MIT"
 }
