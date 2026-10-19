@@ -8,6 +8,10 @@
 
 集中目录包含 registry.json（课程总表、手工资料分类和备注、飞书链接）、indexes/<course_id>.json（各课程索引）、records.json（采集记录、归属和处理状态）、jobs/（索引任务状态日志）。它们不放在各课程目录或插件安装目录，也不随插件上传。
 
+以当前本地 MCP list_courses 返回的 data_root 为权威位置。Windows 应用宿主可能使用应用私有的 LOCALAPPDATA，与终端环境不同；调用 CLI 时必须显式传 `--data-root <该返回路径>`，不要根据终端环境另建一份台账。
+
+资料用途（教材、参考阅读、课件、作业要求/成果、实验指导/报告、复习资料、课堂笔记、代码/数据等）与文件格式分开。get_course_index 返回合并人工指定后的用途、source、confirmed、reason、format、hidden；source=rule 是文件名/目录/格式规则建议，不等于模型通读；只有实际阅读分析后的模型判断才能标 source=model。人工指定在 registry.courses[].materials 中保存，优先于自动建议。主要教材由 primary=true 标记。索引扫描文件数与界面默认展示数可不同：过程文件默认隐藏，可显式查看。
+
 读取：本地 MCP list_courses/get_course_index/list_class_records，或 `app.py list/records`。可视化入口：本地 MCP open_course_manager，或 `python <根>/runtime/app.py open`；用返回的含 `#` 凭据的完整 URL 打开 Codex 浏览器。URL 是本机入口，不是公开分享链接。保存后读回确认。表单内可维护多门课程、完整路径、别名、学期、教师、上课时间、备注、指定教材与其他资料、各资料的类型和备注。默认调用课程管理时同时在聊天列出全部课程信息和打开界面。
 
 CLI 编辑：准备 UTF-8 JSON `{ "revision": 当前revision, "course": {"id":已有ID或省略,"name":"课程名","root":"绝对路径","aliases":[],"semester":"","teacher":"","notes":"","extra_roots":[],"schedule":[],"materials":[{"path":"绝对路径","type":"textbook-markdown","notes":"主要教材"}]} }`，执行 `python <根>/runtime/app.py save-course --input <JSON路径>`。保持未修改字段；revision 冲突时重新读取并合并，不能静默覆盖。保存课程元信息不等于更新资料索引。

@@ -11,6 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
 from store import Store, atomic_json, read_json, now, valid_id, lock
+from catalog import catalog, update_materials
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -63,7 +64,7 @@ def serve(store, port=0):
             self.send_header('Content-Length', str(len(data)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'")
+            self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'")
             self.end_headers()
             self.wfile.write(data)
 
@@ -83,13 +84,19 @@ def serve(store, port=0):
                     if path == '/api/state':
                         return self.respond(200, state(store))
                     if path.startswith('/api/index/'):
-                        return self.respond(200, store.index(path.rsplit('/', 1)[1]))
+                        return self.respond(200, catalog(store, path.rsplit('/', 1)[1]))
                     if path == '/api/records':
                         return self.respond(200, store.records())
                     return self.respond(404, {'error': '接口不存在'})
                 except (ValueError, OSError) as exc:
                     return self.respond(400, {'error': str(exc)})
             files = {'/': ('ui/index.html', 'text/html; charset=utf-8'), '/app.js': ('ui/app.js', 'text/javascript; charset=utf-8'), '/style.css': ('ui/style.css', 'text/css; charset=utf-8'), '/icon.png': ('assets/icon.png', 'image/png')}
+            if path.startswith('/assets/'):
+                import mimetypes
+                file = (ROOT / 'ui' / path.lstrip('/')).resolve()
+                if not file.is_relative_to((ROOT / 'ui' / 'assets').resolve()) or not file.is_file():
+                    return self.respond(404, {'error': '资源不存在'})
+                return self.respond(200, file.read_bytes(), mimetypes.guess_type(file)[0] or 'application/octet-stream')
             if path not in files:
                 return self.respond(404, {'error': '页面不存在'})
             file, mime = files[path]
@@ -105,6 +112,22 @@ def serve(store, port=0):
                 body = json.loads(self.rfile.read(size))
                 if self.path == '/api/course':
                     value = store.save_course(body['course'], body['revision'])
+                elif self.path == '/api/materials':
+                    value = update_materials(store, body)
+                elif self.path == '/api/validate-directory':
+                    folder = Path(str(body.get('path', ''))).expanduser()
+                    if not folder.is_absolute() or not folder.is_dir():
+                        raise ValueError('请选择存在的完整目录路径')
+                    value = {'path': str(folder.resolve()), 'broad': len([p for p in folder.iterdir() if p.is_dir()]) > 8}
+                elif self.path == '/api/pick-directory':
+                    # Run outside the HTTP thread: Tk requires a process main thread.
+                    script = "import tkinter as t;from tkinter import filedialog;import json;r=t.Tk();r.withdraw();r.attributes('-topmost',True);p=filedialog.askdirectory(title='选择课程资料目录');r.destroy();print(json.dumps({'path':p},ensure_ascii=False))"
+                    result = subprocess.run([sys.executable, '-c', script], capture_output=True, text=True, encoding='utf-8', timeout=180,
+                                            creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0,
+                                            env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
+                    if result.returncode:
+                        raise ValueError('系统目录选择器不可用，请粘贴完整目录路径')
+                    value = json.loads(result.stdout)
                 elif self.path == '/api/reindex':
                     value = request_index(store, body['course_id'])
                 elif self.path == '/api/feishu':
@@ -113,12 +136,12 @@ def serve(store, port=0):
                 else:
                     return self.respond(404, {'error': '接口不存在'})
                 return self.respond(200, value)
-            except (ValueError, KeyError, TypeError, RuntimeError, OSError) as exc:
+            except (ValueError, KeyError, TypeError, RuntimeError, OSError, subprocess.TimeoutExpired) as exc:
                 return self.respond(400, {'error': str(exc)})
 
     server = ThreadingHTTPServer(('127.0.0.1', port), Handler)
     url = 'http://127.0.0.1:' + str(server.server_port) + '/#' + token
-    atomic_json(store.root / 'manager.json', {'pid': os.getpid(), 'url': url, 'port': server.server_port, 'created_at': now()})
+    atomic_json(store.root / 'manager.json', {'pid': os.getpid(), 'url': url, 'port': server.server_port, 'created_at': now(), 'runtime_root': str(ROOT)})
     print(json.dumps({'url': url, 'data_root': str(store.root)}, ensure_ascii=False), flush=True)
     server.serve_forever()
 
@@ -144,7 +167,7 @@ def main():
     if args.command == 'open':
         import urllib.request
         info = read_json(store.root / 'manager.json', {})
-        if info:
+        if info and info.get('runtime_root') == str(ROOT):
             try:
                 token = info['url'].split('#')[1]
                 req = urllib.request.Request(info['url'].split('#')[0] + 'api/state', headers={'X-Campus-Token': token})
@@ -158,7 +181,7 @@ def main():
             subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '--data-root', str(store.root), 'serve'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=creation)
             for _ in range(50):
                 info = read_json(store.root / 'manager.json', {})
-                if info and info.get('pid') != (result or {}).get('pid'):
+                if info and info.get('runtime_root') == str(ROOT) and info.get('pid') != (result or {}).get('pid'):
                     try:
                         req = urllib.request.Request(info['url'].split('#')[0] + 'api/state', headers={'X-Campus-Token': info['url'].split('#')[1]})
                         with urllib.request.urlopen(req, timeout=1):

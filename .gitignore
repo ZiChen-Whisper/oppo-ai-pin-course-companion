@@ -12,4 +12,6 @@ manager.json
 course-info-sync.json
 indexes/
 jobs/
+node_modules/
+frontend/.vite/
 *.zip

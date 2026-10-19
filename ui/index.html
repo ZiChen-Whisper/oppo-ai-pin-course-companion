@@ -1,30 +1,3 @@
-<!doctype html>
-<html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>课程管理 · OPPO AI Pin</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
-<body>
-<header><div class="identity"><img src="/icon.png" alt=""><span>课程管理</span><small>Course Companion</small></div><button id="add" class="primary">添加课程</button></header>
-<div class="workspace">
-<aside><label class="search-label" for="search">查找课程</label><input id="search" type="search" placeholder="课程名称、学期或教师"><nav id="courses" aria-label="课程列表"></nav><footer><button id="settings">设置飞书文档</button><details class="data-location"><summary>本地数据位置</summary><p id="location"></p></details></footer></aside>
-<main>
-<div id="notice" role="status" hidden></div>
-<section id="empty" class="empty"><div class="empty-ring"></div><h1>从一门课程开始</h1><p>关联本地教材、课件和实验资料。<br>课堂笔记与课程事项会使用这里维护的信息。</p><button id="first" class="primary">添加第一门课程</button></section>
-<section id="detail" hidden>
-<div class="course-heading"><div><p id="term" class="muted"></p><h1 id="name"></h1><p id="teacher"></p></div><button id="edit">编辑课程</button></div>
-<div class="facts"><div><span>资料目录</span><p id="root"></p></div><div><span>上课时间</span><p id="schedule"></p></div><div><span>备注</span><p id="notes"></p></div><div><span>其他信息</span><p id="extra"></p></div></div>
-<div class="section-head"><div><h2>课程资料</h2><p id="index-time" class="muted"></p></div><button id="reindex">请求更新索引</button></div>
-<p id="job" class="job" hidden></p><p id="warnings" class="warning" hidden></p>
-<div class="table-wrap"><table><thead><tr><th>资料</th><th>类型</th><th>章节 / 备注</th></tr></thead><tbody id="materials"></tbody></table></div>
-<p id="no-files" class="quiet">还没有资料索引。更新后可在这里查看文件与章节。</p>
-</section>
-</main></div>
-<dialog id="editor"><form id="course-form"><div class="dialog-head"><h2 id="editor-title">添加课程</h2><button type="button" id="close">关闭</button></div>
-<div class="form-grid"><label>课程名称<input name="name" required maxlength="160"></label><label>课程别名<input name="aliases" placeholder="多个别名用逗号分隔"></label><label>学期<input name="semester" placeholder="例如：2026 秋季"></label><label>任课教师<input name="teacher"></label></div>
-<label>本地资料目录<input name="root" required placeholder="填写完整目录路径"></label>
-<label>额外资料目录<textarea name="extra_roots" rows="2" placeholder="每行一个目录"></textarea></label>
-<label>上课时间<textarea name="schedule" rows="2" placeholder="例如：周五 08:00–09:40；每行一项"></textarea></label>
-<label>备注<textarea name="notes" rows="3"></textarea></label>
-<fieldset><legend>指定教材与其他资料</legend><p class="muted">指定主要教材，或补充自动索引之外的分类与备注。</p><div id="material-editors"></div><button type="button" id="add-material">添加资料</button></fieldset>
-<p id="form-error" class="error" role="alert" hidden></p><div class="dialog-actions"><button type="button" id="cancel">取消</button><button id="save" class="primary">保存课程</button></div>
-</form></dialog>
-<dialog id="settings-dialog"><form id="settings-form"><div class="dialog-head"><h2>飞书课程信息文档</h2><button type="button" id="settings-close">关闭</button></div><label>文档链接<input id="feishu-url" type="url" placeholder="https://…/docx/…"></label><p class="muted">也可以首次调用课程信息管理时，由 Agent 创建并关联。</p><p id="settings-error" class="error" hidden></p><div class="dialog-actions"><button class="primary">保存链接</button></div></form></dialog>
-</body></html>
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>课程管理 · OPPO AI Pin</title>  <script type="module" crossorigin src="/assets/index-BrW4VXiz.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D7AaBN9F.css">
+</head><body><div id="root"></div></body></html>

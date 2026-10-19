@@ -31,7 +31,9 @@ def handle(req):
             if name=='list_courses':
                 from app import state
                 result=state(store)
-            elif name=='get_course_index': result=store.index(args['course_id'])
+            elif name=='get_course_index':
+                from catalog import catalog
+                result=catalog(store,args['course_id'])
             elif name=='list_class_records': result=store.records()
             elif name=='open_course_manager':
                 run=subprocess.run([sys.executable,str(Path(__file__).with_name('app.py')),'open'],capture_output=True,text=True,encoding='utf-8',timeout=15)
